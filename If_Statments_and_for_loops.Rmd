@@ -1,0 +1,103 @@
+---
+title: "conditional statements"
+author: "emma"
+date: "6/13/2020"
+output: pdf_document
+---
+```
+
+
+```{r}
+x<-array(c(1,2,4))
+y<-array(c(2,4,3))
+dim(x)
+#x%.%y
+dot(1:5,1:5)
+```
+```{r}
+
+```
+
+
+```{r}
+#str(mtcars)
+
+for (i in mtcars$mpg) {
+  if(i>15){
+    mtcars$mpg<-1
+  }
+  else{
+    mtcars$mpg<-0
+  }
+  mtcars
+}
+```
+
+
+# if and if else statements in R
+```{r}
+# IF STATEMENTS
+x<-6
+if (x>0){
+  print("is positive")
+}
+```
+
+
+```{r}
+x<- -5
+if (x>0){
+  print("is positive")
+}else{
+  print("negative")
+  
+}
+```
+
+```{r}
+x<-c(1,2,3,4)
+for (i in x) {
+  if(i%%2==0){
+    cat(i,' is an even number  \n')
+  }
+  else{
+   cat(i,' is an odd number \n')
+  }
+}
+
+```
+```{r}
+x<-c(1,2,3,4,6,7)
+for (i in x) {
+  if(i%%2==0){
+    cat(i,' is an even number ',i*2,' \n')
+  }
+  else{
+   cat(i,' is an odd number',i*3, '\n')
+  }
+}
+
+```
+
+
+
+
+```{r}
+x<-c("go","t","sch")
+if ("t" %in% x){
+  print("there is t")
+
+}else{
+  print("there is no" %in% x)
+  
+}
+
+```
+
+```{r}
+x<-c(1,2,3,4)
+for (i in vector) {
+  
+}
+```
+

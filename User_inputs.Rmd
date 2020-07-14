@@ -1,0 +1,316 @@
+---
+title: "INTRODUCTION TO R"
+author: "ARIZE"
+date: ""
+output: pdf_document
+---
+
+
+```{r}
+
+```
+
+
+```{r}
+# switch
+x<-switch(1,"0ne","two","three")
+x
+
+y<-switch(3,"0ne","two","three")
+y
+```
+
+```{r}
+number1 <- 30
+number2 <- 20
+operator <- readline(prompt="Please enter any ARITHMETIC OPERATOR You wish!: ")
+ 
+switch(operator,
+       "+" = print(paste("Addition of two numbers is: ", number1 + number2)),
+       "-" = print(paste("Subtraction of two numbers is: ", number1 - number2)),
+       "*" = print(paste("Multiplication of two numbers is: ", number1 * number2)),
+       "^" = print(paste("Exponent of two numbers is: ", number1 ^ number2)),
+       "/" = print(paste("Division of two numbers is: ", number1 / number2)),
+       "%/%" = print(paste("Integer Division of two numbers is: ", number1 %/% number2)),
+       "%%" = print(paste("Division of two numbers is: ", number1 %% number2))
+)
+```
+
+```{r}
+number1<-readline(prompt = "enter number1:")
+number2<-readline(prompt = "enter number2:")
+number1=as.integer(number1)
+number2=as.integer(number2)
+
+operator <- readline(prompt="Please enter any ARITHMETIC OPERATOR You wish!: ")
+ 
+switch(operator,
+       "+" = print(paste("Addition of two numbers is: ", number1 + number2)),
+       "-" = print(paste("Subtraction of two numbers is: ", number1 - number2)),
+       "*" = print(paste("Multiplication of two numbers is: ", number1 * number2)),
+       "^" = print(paste("Exponent of two numbers is: ", number1 ^ number2)),
+       "/" = print(paste("Division of two numbers is: ", number1 / number2)),
+       "%/%" = print(paste("Integer Division of two numbers is: ", number1 %/% number2)),
+       "%%" = print(paste("the Division of num1 by num2 is: ", number1 %% number2))
+)
+```
+
+```{r}
+n1<-10
+n2<-13
+oper<-readline(prompt = "enter the operator:")
+switch(oper,"+"=print(paste("addition is:",n1+n2)),"-"=print(paste("sub is:",n2-n1)),"/"=print(paste("division is",n1/n2)) )
+```
+
+```{r}
+x<-letters[1:5]
+for(i in x){
+  print(i)
+}
+y<-LETTERS[1:9]
+for (i in y){
+  print(i)
+}
+
+```
+
+```{r}
+ 
+values <-  c(906, 264, 689, 739, 938)
+ 
+barplot(values,col='red')
+```
+
+
+
+```{r}
+cust[[5]]# to print column 5
+cust[7,3]# 3 is the column, 7 is the 7th position in that clomn
+```
+```{r}
+cust[c(1,2,3),c(2,3,4)]# to print the 1,2,3 rows and columns 2,3,4
+cust$FirstName
+cust[5,3]# accessing the element corresponding to row 5 and column 3
+```
+```{r}
+head(cust, 3)# to print the first 3 rows
+names(cust)# to print the names
+tail(cust, 5) # to display the last 5 rows)
+
+```
+
+```{r}
+summary(cust)
+str(cust)
+```
+
+```{r}
+barplot(cust$YearlyIncome,col="green",border = "red")
+barplot(cust$YearlyIncome,col="green",border = "red",horiz = T,density =20)
+cols = c("Black", "Blue", "brown","green", "Red", "gray", "White", "Yellow","orange","violet","Purple","Pink","Grey")
+barplot(cust$YearlyIncome,col=cols,border="green")
+```
+
+```{r}
+n3<-1:12
+for (i in n3){
+  print(2*i)
+}
+
+country<-c("ghana","togo","niger","benin")
+for (a in country){
+  print(paste("the country is:", a))
+  }
+```
+
+```{r}
+# FUNCTIONS
+fun<-function(x1=4,x2=5,x3=6){
+  m<-x1+x2+x3
+  return(m)
+}
+fun(2,2,2)
+fun()
+```
+
+```{r}
+m_sum<-function(x){
+  b=0
+  for (i in seq(length(x))){
+    b=b+x[i]
+  }
+    return(b)
+}
+m_sum(c(1,2,20,34,5,48,89))
+
+pr<-function(y){
+  h=1
+  for (j in seq(length(y))){
+  
+    h=h*y[j]
+  }
+  return(h)
+}
+pr(c(1,2,3,2))
+```
+
+
+
+
+```{r}
+
+su<-function(a,b,c)
+  {
+  a<-readline(prompt="enter a:")
+b<-readline(prompt = "enter b:")
+c<-readline(prompt = "enter c:")
+a=as.integer(a)
+b=as.integer(b)
+c=as.integer(c)
+  sum<-a+b+c
+  av=sum/3
+  print(paste("sum of",a,",",b,",",c,",","is=",sum))
+    print(paste("av. of ",a,",",b,",",c,",","is=",av))
+}
+su(a,b,c)
+```
+
+```{r}
+su<-function(a,b,c)
+  {
+  a<-readline(prompt="enter a:")
+b<-readline(prompt = "enter b:")
+c<-readline(prompt = "enter c:")
+a=as.integer(a)
+b=as.integer(b)
+c=as.integer(c)
+  sum<-a+b+c
+  av=sum/3
+  print(paste("sum of",a,",",b,",",c,",","is=",sum))
+    print(paste("av. of ",a,",",b,",",c,",","is=",av))
+}
+```
+
+
+```{r}
+height <- c(132,151,162,139,166,147,122)
+weight <- c(48,49,66,53,67,52,40)
+gender <- c("male","male","female","female","male","female","male")
+# Create the data frame.
+input_data <- data.frame(height,weight,gender)
+print(input_data)
+# Test if the gender column is a factor.
+print(is.factor(input_data$gender))
+# Print the gender column so see the levels.
+print(input_data$gender)
+```
+runif(1)
+#> [1] 0.09006613
+
+# Get a vector of 4 numbers
+runif(4)
+#> [1] 0.6972299 0.9505426 0.8297167 0.9779939
+
+# Get a vector of 3 numbers from 0 to 100
+runif(3, min=0, max=100)
+#> [1] 83.702278  3.062253  5.388360
+
+# Get 3 integers from 0 to 100
+# Use max=101 because it will never actually equal 101
+floor(runif(3, min=0, max=101))
+#> [1] 11 67  1
+
+# This will do the same thing
+sample(1:100, 3, replace=TRUE)
+#> [1]  8 63 64
+
+# To generate integers WITHOUT replacement:
+sample(1:100, 3, replace=FALSE)
+#> [1] 76 25 52
+To generate numbers from a normal distribution, use rnorm(). By default the mean is 0 and the standard deviation is 1.
+
+rnorm(4)
+#> [1] -2.3308287 -0.9073857 -0.7638332 -0.2193786
+
+# Use a different mean and standard deviation
+rnorm(4, mean=50, sd=10)
+#> [1] 59.20927 40.12440 44.58840 41.97056
+
+# To check that the distribution looks right, make a histogram of the numbers
+x <- rnorm(400, mean=50, sd=10)
+hist(x)
+```{r}
+getwd()
+setwd("/home/emmanuelarize/BigData/Data/assignment3")
+getwd()
+
+a<-read.csv("/home/emmanuelarize/BigData/Data/assignment3/age.clean",header = T,sep = ',')
+#a
+b<-read.csv("/home/emmanuelarize/BigData/Data/assignment3/custdata.employed.clean",header = T,sep = ',')
+#b
+c<-read.csv("/home/emmanuelarize/BigData/Data/assignment3/num.vehicles.clean",header = T,sep=',')
+#c
+d<-read.csv("/home/emmanuelarize/BigData/Data/assignment3/housing.type.clean",header = T,sep = ',')
+#d
+
+#f<-cbind(a,b)# f and h are the same
+#f
+
+h<-data.frame(a,b)
+g<-cbind(c,d)
+g[1:2,]# to print the first two columns
+```
+
+```{r}
+# generating uniform random numbers
+runif(1)
+#> [1] 0.09006613
+
+# Get a vector of 4 numbers
+runif(4)
+#> [1] 0.6972299 0.9505426 0.8297167 0.9779939
+
+# Get a vector of 3 numbers from 0 to 100
+runif(3, min=0, max=100)
+#> [1] 83.702278  3.062253  5.388360
+
+# Get 3 integers from 0 to 100
+# Use max=101 because it will never actually equal 101
+floor(runif(3, min=0, max=101))
+#> [1] 11 67  1
+
+# This will do the same thing
+sample(1:100, 3, replace=TRUE)
+sample(1:13,3 ,replace = T)
+
+#> [1]  8 63 64
+
+# To generate integers WITHOUT replacement:
+sample(1:100, 3, replace=FALSE)
+sample(1:3,3)# by default is sample without replacement
+#> [1] 76 25 52
+
+# RANDOM NUMBERS FROM NORMAL DISTRIBUTION
+
+#To generate numbers from a normal distribution, use rnorm().
+#By default the mean is 0 and the standard deviation is 1.
+
+rnorm(4)
+#> [1] -2.3308287 -0.9073857 -0.7638332 -0.2193786
+
+# Use a different mean and standard deviation
+rnorm(4, mean=50, sd=10)
+#> [1] 59.20927 40.12440 44.58840 41.97056
+
+# To check that the distribution looks right, make a histogram of the numbers
+x <- rnorm(400, mean=50, sd=10)
+hist(x)
+#par(mfrow=c(1,3))
+```
+
+```{python}
+## installing a package in python
+python -m pip install package_name
+
+```
+

@@ -1,0 +1,134 @@
+---
+title: "Untitled"
+author: "emma"
+date: "6/25/2020"
+output: pdf_document
+---
+
+
+```{r}
+x <- c(2,9, 4.2,5,6,8,10.2)
+x[1]
+x[c(3,2)]
+x[c(1:4)]
+x[order(x)]
+order(x)# print the position of the values in x in ascending order
+#omit the first and second value
+x[-c(1, 2)]
+x[x>4]
+x[]#Nothing returns the original vector
+```
+
+```{r}
+a <- matrix(1:9, nrow = 3)
+colnames(a)<-c('col1','col2','col3')
+a
+a[1:3,c('col1')]
+
+a[,c('col2')]
+```
+```{r}
+a<-outer(1:3,1:3,FUN = "paste",sep=",")
+a
+```
+
+```{r}
+a[1:2,1:2]
+```
+```{r}
+x <- outer(1:3, 1:3, FUN = "*")
+x
+```
+
+```{r}
+x[c(1:2),c(2:3)]# row 1,2 and column 2,3
+```
+
+assigning 21 to row 1 col 2, 22 to row 1 col 3 , 30 to row 2 col 2, 40 to row 2 col 
+
+```{r}
+x[c(1:2),c(2:3)]<-c(21,22,30,40)
+cat(" print all values of x without column 2 \n")
+x[,-2]#
+cat(" print all values of x without column 1 and 2 \n")
+x[,c(-1,-2)]
+```
+subsetting a dataframe
+```{r}
+df<-data.frame(name=c('ama','kofi','yaw','emma'),age=c(24,20,9,10),
+              sex=c('female','male','male','female'))
+df$name
+```
+
+```{r}
+df[c('age','sex')]
+```
+Select 2 random rows without replacement
+```{r}
+df[sample(nrow(df),2),]
+```
+Select 4 random rows with replacement
+```{r}
+df[sample(nrow(df),5,replace = T),]
+```
+```{r}
+reorder_col<-df[sample(nrow(df),5,replace = T),3:1]
+reorder_col
+```
+```{r}
+
+mtcars<-mtcars
+# structure of the Motor Trend Car Road Tests
+str(mtcars)
+# first few elements of the data
+head(mtcars)
+# shape of the data
+dim(mtcars)
+
+```
+```{r}
+summary(mtcars$mpg)
+plot(mtcars$mpg, mtcars$disp,main = 'mpg vrs disp')
+plot(mtcars$mpg, mtcars$wt,main = 'mpg vrs wt')
+```
+The attach() function adds the data frame to the R search path
+Detach Objects from the Search Path
+```{r}
+attach(mtcars)
+summary(mpg)
+plot(mpg, disp,main = 'mpg vrs disp')
+plot(mpg,wt,main = 'mpg vrs wt')
+detach(mtcars)
+```
+subsetting instances where mpg is less than 15
+```{r}
+mtcars[mtcars$mpg <15,]
+```
+subsetting instances where mpg is less than 15 and ls disp<400
+```{r}
+mtcars[mtcars$mpg <15 & mtcars$disp <400,]
+```
+
+subsetting instances where mpg is less than 15 OR disp<400
+```{r}
+mtcars[mtcars$mpg <15 || mtcars$disp <400,]
+
+```
+
+The limitation of the with() function is that assignments exist only within the
+function brackets
+```{r}
+with(mtcars,{
+  s<-summary(mpg)
+  s
+})
+#su # does not exist outside the brackets
+```
+for s to exist outside the brackets use <<
+```{r}
+with(mtcars,{
+  s<<-summary(mpg)
+})
+s
+```
+

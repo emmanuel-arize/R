@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output: pdf_document
+---
+
+codetools::findGlobals()  function lists all the external dependencies of a function:
+```{r}
+f<-function()x**2
+x<-6
+f()
+x<-9
+f()
+codetools::findGlobals(f)
+```
+```{r}
+f<-function(x){
+  f<-function(x){
+    3*x# first evaluate and store the value in f(x)
+  }
+  f(x)+2 # add 2 to the value stored in f(x)
+}
+f(2)
+```
+
+
+```{r}
+data<-data.frame(age=c(12,23,45,66,12),imcome=c(100,200,200,400,90))
+data
+add<-function(x)x/10
+#sapply(list, function)
+print("dividing by 10")
+sapply(data, add)
+print("dividing by 100")
+sapply(data, function(x)x/100)
+add(data)
+
+```
+
+```{r}
+mut<-function(x,y){
+  x*y
+  #c(x*y)
+}
+mut(2,3)
+
+
+modify<-function(x,pos,value){
+  x[pos]<-value
+  x
+}
+x<-c(1,2,3,4)
+x
+x<-modify(x,2,6)
+x
+```
+```{r}
+sigmoid<-function(z){
+  output<-1/(1+exp(z))
+  return(output)
+}
+
+data<-data.frame(age=c(12,23,45,66,12),imcome=c(100,200,200,400,90))
+#data
+sigmoid(data)
+```
+
+
