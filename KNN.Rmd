@@ -1,0 +1,191 @@
+---
+title: "KNN"
+author: "emma"
+date: "8/22/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# K-Nearest Neighbour
+
+The KNN is one of the simplest machine learning algorithms and an example of instance-based learning, where new instances are predicted based on stored instances. k-nearest neighbors algorithm (k-NN) is a supervised nonparametric method used for both classification (data with discrete labels) and regression (data with continuous labels) but  widely used for classification problems. At the heart of this method is the K ( The number of nearest neighbors to look for) parameter. Unlike other supervised learning algorithms, K-NN does not learn an explicit mapping f from the training data which will used in making predictions or classifying new instances but instead with a predefined K, KNN finds the K training samples that are closest to the new instance based some distance or similarity function such as Euclidean (commonly used), Manhattan, Mahalanobis, cosine similarity function and predict the label from these K closest training example.
+
+# In classification settings
+Once k is selected, given a new instance the method assigns a label to a new instance (unlabeled vector) based on the k closest training data points,  that is a new instance is classified by assigning the label which is most frequent or common among the k training samples nearest to that new instance.
+
+# K-NN USED AS A REGRESSOR
+assign the average response (Average the values of k nearest neighbors)  of the of k nearest neighbors
+
+```{md}
+# K-Nearest Neighbors Algorithm 
+* Determine parameter K 
+* Compute the distance of the new instance from each training point 
+* Sort the distances in ascending (or descending) order
+* Select the K nearest neighbors based on the sorted distances 
+* Use majority rule (for classification) or averaging (for regression)
+
+# NOTE
+The choice of distance or similarity function depends on the type of features in the dataset
+The experimental results from [Effects of Distance Measure Choice on KNN Classifier
+Performance - A Review](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4978658/) 
+show that the performance of KNN classifier depends significantly on the distance measure used. 
+The results also show that some distance measure are less affected by added noise.
+
+
+```
+
+```{r}
+library(ggplot2)
+library(caret)
+library(class)
+set.seed(1000)
+```
+
+#loading the iris dataset
+
+```{r}
+data(iris)
+```
+
+# displaying the first two observations
+```{r}
+head(iris,2)
+```
+
+
+
+# structure of the dataset
+```{r}
+str(iris)
+```
+
+
+# the data contain 150 observations (instances) and 4 variables(features) and a target variable
+```{r}
+summary(iris)
+```
+
+
+
+```{r}
+names(iris)
+```
+
+```{r}
+table(iris$Species)
+```
+
+
+# recoding the variable names
+
+```{r}
+names(iris)<-c('Sepal_Length', 'Sepal_Width', 'Petal_Length' ,'Petal_Width', 'Species')
+```
+
+```{r}
+head(iris,3)
+```
+
+
+# scatter plot of Sepal_width vrs Sepal_length'
+```{r}
+ggplot(iris,aes(x=Sepal_Length,y=Sepal_Width,colour = Species))+geom_point()+
+ggtitle('Sepal_width vrs Sepal_length')
+```
+
+
+
+
+from the graph there sepal length and the sepal width of the Setosa is highly correlated but the correlation for Virginica and
+Versicolor is showhow less
+
+```{r}
+ggplot(iris,aes(x=Petal_Length,y=Petal_Width,colour = Species))+geom_point(size=1.3)+geom_smooth()+ggtitle('Petal_width vrs Petal_length')
+```
+
+
+
+from the graph there petal length and the petall width of the Setosa, Virginica and Versicolor are highly correlated
+
+```{r}
+qplot(Petal_Width, Petal_Length, data = iris,geom = c("point", "smooth")
+      )
+```
+
+
+
+
+
+MIN-Max normalization
+
+```{r}
+min_max<-function(x){
+  num<-x-min(x)
+  deno<-max(x)-min(x)
+  return(num/deno)
+  }
+```
+
+normalizing the feactures
+```{r}
+normalized_iris<-as.data.frame(lapply(iris[1:4],min_max))
+```
+
+
+```{r}
+normalized_iris<-cbind(normalized_iris,iris[5])
+str(normalized_iris)
+```
+
+```{r}
+head(normalized_iris,4)
+```
+
+
+
+# (x, size, replace = FALSE, prob = NULL)
+
+
+```{r}
+ind<-sample(2,nrow(normalized_iris),replace = TRUE,prob = c(0.7,0.3))
+```
+
+```{r}
+iris_train<-normalized_iris[ind==1,1:4]
+y_train<-normalized_iris[ind==1,5]
+
+iris_test<-normalized_iris[ind==2,1:4]
+y_test<-normalized_iris[ind==2,5]
+```
+
+```{r}
+k_nn<-knn(train = iris_train,test = iris_test,cl = y_train,k = 3)
+```
+
+
+```{r}
+table(k_nn,y_test)
+```
+
+```{r}
+acc<-100*sum(y_test==k_nn)/length(y_test)
+acc
+```
+
+
+comparing the predicted class with the true class
+```{r}
+k_nn==y_test
+```
+
+
+
+
+
+```{r}
+confusionMatrix(table(k_nn,y_test))
+```
+
