@@ -1,0 +1,175 @@
+---
+title: "Linear reg"
+author: "emma"
+date: "8/26/2020"
+output: pdf_document
+---
+options(repos=‘http://cran.rstudio.com/’)
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(caTools)
+library(ggplot2)
+set.seed(1000)
+```
+
+# Linear Regression
+
+----
+linear regression is one of the most widely used regression models. The model seek to identify a linear relationships between the dependent and independent variable(s). It models the expected value of a quantitative response (dependent) variable  from one or more explanatory variables (independent variables). 
+
+
+
+
+# Simple Linear Regression and ordinary least squares (OLS)
+----
+
+simple linear regression involves predicting a quantitative response variable from a single explanatory variable
+
+
+Let consider a simple linear regression to determine how the number of flyers sold on a day relate or determine the Sales of the day defined by
+
+$$Y = \beta_{0} +\beta_{1}x + \epsilon$$ 
+
+where 
+ε is a random variable with mean zero 
+   y=Sales
+  x=number of flyers sold
+    $$\beta_{0}=the \ intercept \ of \ the \ line \ (bias)$$
+    
+$$\beta_{1}=the \ slope \ of \ the \ line \ (weight)$$
+  
+ 
+ # NOTE
+ The intercept and slope are known as the model coefficients or parameters. 
+ 
+ 
+ 
+```{r}
+data<-read.csv("data/Lemonade.csv")
+head(data,3)
+```
+ we want to model a simple linear regression using Sales as the response variable and Flyers as the independent variable so are
+droping the 'Date', 'Day', 'Temperature', 'Rainfall', 'Price', variables
+```{r}
+data=data[c(5,7)]
+head(data,3)
+```
+
+ Our goal is to predict the expected amount of Sales (y) for the day based on the number of flyers sold defined as
+
+$$E(Y)= \beta_{0} +\beta_{1}x $$ 
+
+In order to be able to predict the expected amount of Sales for a day from the number of flyers sold we need to estimate the parameters 
+$$\hat \beta_{0}\ and \ \hat \beta_{1}$$ 
+
+such that
+
+$$\hat y=\hat \beta_{0} +\hat \beta_{1}x$$
+
+where 
+
+$$\hat y \ is \ the \ expected \ prediction \ for \ Y (Sales) \ based \ on \ the \ ith \ value \ of \ X \ (the \ number \ of \   flyers \ sold) \ using \ the \ learned \ parameters$$
+
+
+We choose 
+$$\hat \beta_{0} \  and \ \hat \beta_{1}$$
+in such a way that minimize the residual sum of squares (RSS or $$SS_{res}$$) errors  defined as
+
+$$SSR=SS_{res}=e^{2}=\sum_{i}^{n}(y_{i}-\hat y_{i})^{2}$$
+
+
+$$ \hat \beta_{0}= \bar y -\hat \beta_{1} \bar x$$
+
+$$\hat \beta_{1}=\frac{\sum_{i}^{n}(x_{i}-\bar x) (y_{i}-\bar y)}{\sum_{i}^{n}(x_{i}-\bar x)^{2}}$$
+
+
+# residual sum of squares
+$$SSR=SS_{res}=\sum_{i}^{n}(y_{i}-\hat y_{i})^{2}$$
+
+
+# The total sum of squares SST
+
+$$SST =\sum_{i}^{n}(y_{i}- \bar y)^{2} $$
+
+$$ SST= SS_{res} + SS_{reg}$$
+
+# regression sum of squares or explained sum of squares, 
+is given by
+
+$$SS_{reg} =\sum_{i}^{n}(\hat y_{i}- \bar y)^{2} $$
+
+
+# R-squared Coefficient of determination or measures of fit or goodness fit
+
+is the proportion of the variance in the dependent variable that is predictable or accounted or explained by the independent variable(s). 
+
+$$R^{2}$$
+
+normally ranges from 0 to 1 (NB can be negative)  with best possible score being 1.0 
+
+and is defined as
+
+$$R^{2}=1-\frac{SS_{res}}{ SS_{tot}} $$
+$$OR$$
+$$R^{2}=\frac{SS_{reg}}{ SS_{tot}}=\frac{SS_{reg}/n}{ SS_{tot} / n} $$ 
+
+# The adjusted R-squared
+The adjusted R-squared is a modified version of R-squared for the number of predictors in a model. The adjusted R-squared increases only if the added independent variable improves the model and decreases if the added independent variable improves the model by less than expected by chance. 
+
+$$R^{2} \ Adjusted= 1- \frac{ \frac{SS_{res}}{n-p-1}}{ \frac{SS_{tot}}{n-1}  } $$
+
+
+
+$$R^{2} \ Adjusted=1-\frac{(1- R^{2})(n-1)}{n-p-1}  $$
+
+where is p is total number of independent (explanatory) variables in the model (not including the constant term or bias), and n is the sample size
+
+# difference between R-squared and the adjusted R-squared
+One major difference between R-squared and the adjusted R-squared is that <b>R-squared</b> gives the proportion of variance or percentage of variation in the dependent variable that is accounted for or explained by the independent variables as if all the independent variables in the model really affect the dependent variable. Every independent variable added to a model increases the R-squared and never decreases it while the adjusted R-squared gives the gives the proportion of variance or percentage of variation explained only the independent variables that really affect the dependent variable, usually lower than the R-squared. The adjusted R2 increases or decreases when the independent variable is added to the model showing how that independent variable affect the dependent variable and is best suited for multiple linear regression.
+
+
+```{r}
+ggplot(data ,aes(x=Flyers,y=Sales))+geom_point(size=3)+ggtitle('Flyers vrs Sales')+geom_smooth(method = lm)
+```
+
+
+from the diagram above there seems to be a positive relationship between flyers and Sales that is increasing the number of flyers sold on a day increases Sales for the day
+
+
+
+```{r}
+ind<-sample(2,nrow(data),replace = TRUE,prob = c(0.7,0.3))
+train<-data[ind==1,]
+test<-data[ind==2,]
+y_test=data[ind==2,]
+```
+
+```{r}
+lrg<-lm(Flyers~Sales,data = train)
+```
+
+```{r}
+summary(lrg)
+```
+
+```{r}
+lrg$coefficients
+```
+
+
+when we get a different value for the intercept  and the slope (sales) we have have to change b0 and b1 
+```{r}
+expected_sales<-function(x){
+  b0<-4.750334
+  b1<-1.383740
+  cat("The expected Sales for",x,"flyers sold is :",b0+b1*x )
+}
+
+expected_sales(10)
+```
+
