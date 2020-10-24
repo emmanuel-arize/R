@@ -1,0 +1,387 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+## ***CLASSIFICATION PROBLEM***
+
+In the previous section we talked about regression which deals with quantitative target variable answering questions such as how much? or how many?. Regression problems include predicting the price of a house, the age of students and the salary of an employee.
+
+***In practice, we are more often interested in making categorical assignments: asking not how much? but which one (a boy or a girl, spam or not spam)***?. We consider a problem to be a classification problem when dealing with qualitative (categorical) target variable with the aim of assigning an input described by vector $X$ to one of the $n$ discrete categories (classes) $C_{i}$ where $i = 1,2 \cdots,n$.
+
+A classifier is a map $f(x) \rightarrow C_{i}$
+
+There are numerous classification methods that can be used to predict categorical outcomes, including logistic regression, linear discriminant analysis (LDA), K-nearest neighbors (KNN), support vector machines (SVM) ,decision trees , neural networks etc.
+
+# Logistic regression
+
+The simplest classification problems involves only two classes which are usually labeled 0 for negative class (y=0\|x) and 1 for positive (y=1\|X) . Classification problems involving only two categories are often called $binary \ classification \ problems$.
+
+$Logistic \ regression$ is a probabilistic binary classifier which estimates, for each data point, the conditional probability that it belongs to one of the two classes, that is Logistic regression is applied to situations in which the response variable is dichotomous (0 or 1).
+
+This can be used to classify an observation into one of the two classes (like 'positive sentiment' or 'negative sentiment', perished or survived, yes or no), from a set of continuous or categorical predictor variables. By choosing a threshold value (usually 0.5), we classified output with probability greater than the threshold as one class usually the class labeled 1 (positive class) and values below the threshold as belonging to the other class labeled 0 (negative class)
+
+# NOTE : We want to predict whether a mortgage application will be approved or not
+
+Recall from linear regression
+
+$$
+ \hat y= \beta_{i}X+b
+$$
+
+***Here we are interested in asking the question*** $"given \  an \  imput \ X , \  what \ is \  the \  probability \  that \  an \ applicant \  mortgage \  will \  be \  approved P(y=1|X) "$. A regular linear model is a poor choice here because it can output values less than 0 or greater than 1, since the true probability fall between 0 and 1, so instead of outputting values from the linear model, the result from the linear model is then fed as an input to the logistic function and this provides a nonlinear transformation on its input and ensures that the output values lies between the range of 0 and 1 [0,1]and is defined as
+
+$$ P(X)=P(y=1\|X)=\hat y$$
+
+$$1- P(X)=P(y=0|X)$$
+
+$$z=\sum_{i=1}^{n}\beta_{i}X_{i} +b_{i}$$
+
+$$P(X)=\frac{exp(z)}{1+exp(z)} $$
+
+we will denote logistic function by $\sigma$
+
+$$
+\sigma(z)=\frac{1}{1+exp(-z)}
+$$
+
+# (accepted mortgage is represented by 1 and a mortgage denied is represented by 0)
+
+When x = 0, the logistic function takes the value 0.5 and as x tends to $\infty$, the
+
+exponential in the denominator vanishes and the function approaches the value 1.
+
+As x tends $-\infty$ the denominator tends to move toward infinity and the function approaches the value 0. This ensures that our output values lies between 0 and 1.
+
+```{r}
+logistic_fn=function(x){
+    return(1/(1+exp(-x)))
+}
+```
+
+# Result for the denominator as x tends to
+
+# $\infty$
+
+```{r}
+b<-function(x){
+    return (1+exp(-x))
+    }
+b(100000)
+logistic_fn(100000)
+```
+
+# result for logistic function when x = 0
+
+```{r}
+logistic_fn(0)
+```
+
+# Result for logistic function as x tends to
+
+# $-\infty$
+
+```{r}
+logistic_fn(-100000)
+
+```
+
+Using Logistic function, we first computes a real-valued score from $\beta_{i}X_{i} +b_{i}$ and then pass the real value through logistic function to turn this score into a probability score***.***
+
+***As already defined P(X) is the conditional mean of Y (that is, the probability that Y = 1 given a X )***
+
+$$
+P(X)=\frac{exp(z)}{1+exp(z)}
+$$
+
+$$ 1-P(X)=\frac{1}{1+exp(z)} $$
+
+$$
+\frac{P(X)}{1-P(X)} =exp(z)
+$$
+
+$$
+OR
+$$
+
+$$
+P(X)=\frac{exp(z)}{1+exp(z)}
+$$
+
+$$
+P(X)(1+exp(z))=exp(z)
+$$
+
+$$
+ P(X)+P(X)exp(z)=exp(z)
+$$
+
+$$
+P(X)=exp(z)-P(X)exp(z)
+$$
+
+$$
+P(X)=exp(z)(1-P(X))
+$$
+
+$$
+\frac{P(X)}{(1-P(X))}=exp(z)=\sum_{i=1}^{n}\beta_{i}X_{i} +b_{i}
+$$
+
+Where $\frac{P(X)}{1 − P(X)}$ is called the odds, and can take on any value between 0 and $\infty$
+
+taking the logarithm of both sides we get
+
+$$\log (\frac{P(X)}{1-P(X)}) =z$$
+
+where $log(\frac{P(X)}{1 − P(X)})$ is the log odds, or logit.
+
+# NOTE in logistic regression, a unit increase in feature X results in multiplying the odds ratio by $\exp^{\beta_{i}}$
+
+> ***"The logistic regression model has a logit that is linear in X. Because the relationship between p(X) and X in is not a straight line,*** $\beta_{i}$ ***does not correspond to a change in P(X) associated with a one-unit increase in X but the changes in p(X) due to a one-unit change in X will depend on the current value of X. But regardless of the value of X , if*** $\beta_{i}$ ***is positive then increasing X will be associated with increasing p(X), and if*** $\beta_{i}$ ***is negative then increasing X will be associated with decreasing p(X). "***
+
+> ***'''(source: An Introduction to Statistical Learning with Applications in R by Gareth James Daniela Witten Trevor Hastie Robert Tibshirani page 133)'''***
+
+# Estimating the Regression Coefficients Using Maximum Likelihood Estimation
+
+The likelihood of an observation is the probability of seeing that observation under a particular model and since the likelihood of each observation is parameterize by the regression coefficients $\beta_{i}$ we can mathematically express the likelihood function as
+
+# Note $\hat y=P(y_{i}=1|X_{i})$
+
+$$\ell( \beta_{i})=\prod_{i,y_{i}=1}P(y_{i}=1|X_{i})^{y_{i}}  \prod _{i,y_{i}=0}(1-P(y_{i}=1|X_{i}))^{(1-{y_{i}})}$$
+
+The estimates $\beta_{i}$ are chosen to maximizes the likelihood function and this likelihood function simply computes the probability that a logistic regression model with a particular set of regression coefficients could have generated our training data.
+
+Taking the log-likelihood of the equation we get
+
+$$
+log\ell( \beta_{i})=\sum_{i,y_{i}=1}logP(y_{i}=1|X_{i})^{y_{i}} + \sum _{i,y_{i}=0}log(1-P(y_{i}=1|X_{i}))^{(1-{y_{i}})}
+$$
+
+$$
+log\ell( \beta_{i})=\sum_{i}{y_{i}}logP(y_{i}=1|X_{i}) + {(1-{y_{i}})}log(1-P(y_{i}=1|X_{i}))
+$$
+
+# DATA
+
+This data concern the prediction of a mortgage application approval based on 500000 observations with 22 features and a target variable (accepted) indicating whether a mortgage application was accepted or denied, based on a mortgage approval data adapted from the [Federal Financial Institutions Examination Council's (FFIEC)](https://www.ffiec.gov/hmda/hmdaflat.htm)
+
+```{r}
+library(caret)
+library(tidyverse)
+
+```
+
+```{r}
+data=read.csv('data/train_values.csv',sep = ",")
+label=read.csv('data/train_labels.csv',sep = ",")
+
+```
+
+```{r}
+head(data,2)
+
+```
+
+```{r}
+head(label,3)
+```
+
+```{r}
+dim(data)
+
+```
+
+```{r}
+nrow(data)
+ncol(data)
+
+```
+
+concatenating the labels and the features while dropping the row\_id since it contains no information but only acting as identifier
+
+```{r}
+data=cbind(data[-1],label[-1])
+
+```
+
+```{r}
+head(data,3)
+```
+
+# for simplicity we are dropping some columns
+
+```{r}
+data=data[,!names(data) %in% c('msa_md','minority_population_pct',      'ffiecmedian_family_income','occupancy','population' ,'state_code',
+           'number_of_owner_occupied_units','tract_to_msa_md_income_pct','number_of_1_to_4_family_units' )]
+
+```
+
+```{r}
+dim(data)
+```
+
+```{r}
+names(data)
+```
+
+# drop observations containing missing values
+
+```{r}
+clean_data<-na.omit(data)
+```
+
+```{r}
+dim(clean_data)
+```
+
+# structure of the data
+
+```{r}
+str(data)
+
+```
+
+from the displayed structure of the data, we can see that features like loan\_type, property\_type, etc are categorical variables which must be converted to factors
+
+# Categorical variables
+
+```{r}
+colu=c('loan_type','property_type', 'loan_purpose', 'preapproval' , 'applicant_ethnicity' ,'applicant_race' ,
+       'applicant_sex' , 'co_applicant','accepted')
+
+```
+
+```{r}
+head(clean_data[,colu],3)
+```
+
+# A function to convert the categorical variables to factors
+
+```{r}
+cat_factors<-function(dat,coll){
+    for(i in coll){
+        dat[i]<-factor(dat[[i]])
+                }
+    return (dat)
+    
+}
+
+```
+
+```{r}
+clean_data=cat_factors(clean_data,colu)
+```
+
+```{r}
+str(clean_data)
+```
+
+```{r}
+table(clean_data$loan_type)
+
+```
+
+# Scaling numerical features
+
+```{r}
+num_feat<-c('loan_amount','county_code','applicant_income', 'lender')
+
+```
+
+```{r}
+head(clean_data[num_feat])
+```
+
+```{r}
+clean_data[num_feat]<-scale(clean_data[num_feat])
+```
+
+```{r}
+head(clean_data[num_feat])
+```
+
+
+# ind<-sample(2,nrow(clean_data),replace = TRUE,prob = c(0.7,0.3))
+# trainn<-clean_data[ind==1,]
+# testt<-clean_data[ind==2,]
+```{r}
+indx<-clean_data$accepted %>% createDataPartition(p = 0.7,list = FALSE)
+train<-clean_data[indx,]
+test<-clean_data[-indx,]
+
+```
+
+```{r}
+nrow(train)
+nrow(test)
+```
+
+```{r}
+head(train,9)
+```
+
+```{r}
+head(test,9)
+```
+
+```{r}
+logist_reg<-glm(accepted~.,data = train,family = binomial())
+```
+
+```{r}
+summary(logist_reg)
+```
+
+```{r}
+table(clean_data$loan_type)
+```
+
+The shows that for our categorical variables, we have one fewer feature than the number of levels in the original variable, for example, the loan\_type has four category but the result produced only three variables labeled loan\_type2, loan\_type3,loan\_type4. One class or category is set to zero 0 and we use the value of the intercept when interpreting the model using the estimated coefficients. z-statistic is analogous to the t-statistic that we encountered in linear regression. Higher Z-value for a feature is an indication that, that particular feature is significantly related to our output variable and their significant levels are confirmed by their associated p-values
+
+```{r}
+exp(coef(logist_reg))
+```
+
+the odds of accepting applicant mortgage are multiplied by a factor of 1.0997181 for every increase in applicant income.
+
+```{r}
+pred<-logist_reg %>% predict(newdata=test,type='response')
+```
+
+```{r}
+head(pred,10)
+```
+
+```{r}
+pred<-ifelse(pred>=.5,1,0)
+```
+
+```{r}
+head(pred,10)
+```
+
+# Overall classification accuracy
+```{r}
+accuracy<-mean(test$accepted==pred)
+accuracy
+```
+```{r}
+error<-mean(test$accepted !=pred)
+error
+```
+# Confusion matrix
+
+```{r}
+table(test$accepted,pred,dnn=c("Actual","Predicted"))
+```
+```{r}
+table(test$accepted,pred,dnn=c("Actual","Predicted")) %>% prop.table() %>% round(digits =4)
+```
+```{r}
+confusionMatrix(test$accepted,factor(pred),dnn=c("Actual","Predicted"),positive = '1')
+```
+
+
+
+
