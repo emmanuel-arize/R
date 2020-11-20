@@ -1,0 +1,48 @@
+---
+title: "Linear Discriminant Analysis"
+output: html_document
+---
+
+# Using Bayes' Theorem
+
+Bayes' theorem states that
+
+$$ P(Y=k|X=x)= \frac{P(Y=k)P(X|Y=k)}{P(X)}  $$
+
+$$
+OR
+$$
+
+$$ P(Y=k|X=x)= \frac{P(Y=k)P(X|Y=k)}{\sum_{j}P(X=x|Y=j)P(Y=j)}  $$
+
+$P(Y=k)$ is the prior probability and is the probability that a given observation is associated with the kth category of the response variable Y. If we have a random sample of Y's from the population then we find $P(Y)$ by computing the fraction of the training observations that belong to the kth class.
+
+$P(Y=k|X=x)$ is the posterior probability, the probability of the observation belong kth class after seeing the observation.
+
+$P(X=x|Y=k)$ called the likelihood . Given the response, what is the distribution of the inputs (the density function of X for an observation that comes from the kth class and has relatively large value if that observation is belongs to class k).
+
+Suppose the response variable contain only two categories $0$and $1$then
+
+$$P(X)=P(Y=0)P(X|Y=0)+ P(Y=1)P(X|Y=1)$$
+
+$P(X)$ is the probability of the data under any hypothesis, called the normalizing\
+constant\
+
+\
+
+\
+\# Discriminant analysis Discriminant analysis is a fundamental classification method in statistical and probabilistic learning used to predict the probability of an observation belonging to a given class based the predictor variable(s).Compared to logistic regression, discriminant analysis is more suitable multi-class (Target variable contains more than two classes) and is more stable than the logistic regression for multi-class classification problems
+
+# Linear Discriminant Analysis for p = 1(p = 1---that is, we have only one predictor)
+
+
+ 
+# Linear Discriminant Analysis
+Suppose we have a data represented by $ X \in R^{m \x n}$
+
+
+
+
+
+
+
