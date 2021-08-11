@@ -1,0 +1,169 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+setwd('C:/Users/USER/Desktop/JUPYTER_NOTEBOOK/A_MYTUTORIALS/MYR/NEW-R')
+```
+
+## Concepts
+
+> document: some text.
+
+> corpus: a collection of documents.
+
+> vector: a mathematically convenient representation of a document.
+
+> model: an algorithm for transforming vectors from one representation to 
+
+```{r}
+library(tidytext)
+library(dplyr)
+library(ggplot2)
+```
+
+loading the data
+
+```{r}
+shakespeare <-readLines('./data/tinyshakespeare.txt')
+```
+
+
+
+```{r}
+shakespeare[1:10]
+```
+
+
+
+```{r}
+shakespeare<-tibble(line=1:40000,text=shakespeare)
+```
+
+we will now tokenize the text
+
+```{r}
+shakespeare_tokens<-shakespeare %>% unnest_tokens(word,text)
+
+```
+
+
+let remove stop word from the tokens
+
+```{r}
+data("stop_words")
+shakespeare_tokens<-shakespeare_tokens %>% anti_join(stop_words)
+
+```
+counting the frequency of each token
+```{r}
+words_count<- shakespeare_tokens %>% count(word,sort = TRUE)
+
+```
+
+
+most common words with frequency greater or equal to 300
+
+
+```{r}
+
+words_count %>% filter(n>=300)
+```
+
+ploting the most common words with frequency greater or equal to 300
+```{r}
+words_count %>% filter(n>=300) %>%mutate(word=reorder(word,n)) %>%ggplot(aes(n,word,fill=word))+geom_col()+
+  ggtitle('The Most Common words')+theme(plot.title = element_text( color="blue", size=30, face="bold.italic" ))
+
+```
+
+
+```{r}
+library(wordcloud2)
+
+```
+
+```{r}
+wordcloud2(data=words_count)
+```
+
+
+
+```{r}
+wordcloud2(words_count,size = 2)
+
+```
+
+
+```{r}
+
+wordcloud2( words_count,size=2, color='random-light' , backgroundColor="black")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
